@@ -15,7 +15,14 @@ This project implements a **Hybrid Physics–Machine Learning defense framework*
    - **$P(\text{Attack}) \in [0, 1]$**: Continuous probability of an active attack.
    - **Attack Classification**: Normal, Intercept-Resend, Detector Blinding, Jamming/DoS, or PNS.
    - **Automated Policy Decision**: `PROCEED_WITH_KEY_DISTILLATION` vs `ABORT_KEY_EXCHANGE`.
-4. **AES-256-GCM Quantum-Secured Cryptography**: Uses the distilled 256-bit symmetric quantum key to encrypt confidential payloads with Galois/Counter Mode (GCM) authenticated encryption and 128-bit MAC tag verification.
+4. **Holistic Quantum Security Score & Leakage Risk Analyzer**:
+   - Calculates a multi-factor **Security Score (0 to 100)** incorporating QBER margins, Bell CHSH entanglement violation, ML attack confidence, and key throughput.
+   - Evaluates **Eve's Holevo mutual information bound** ($I(A:E)$) and residual secrecy capacity fraction.
+5. **Adaptive Parameter Optimizer (Closed-Loop Autonomous Tuning)**:
+   - **Asymmetric Basis Tuning**: Biases basis selection ($p_Z=0.85, p_X=0.15$) on clean channels to raise sifting efficiency from $50\%$ to $74.5\%$.
+   - **Dynamic Coincidence Window**: Narrows coincidence time gate ($2.5\text{ ns} \to 1.2\text{ ns}$) under high noise or long distances.
+   - **Anti-Blinding Countermeasure**: Automatically engages Variable Optical Attenuator (VOA, $+15\text{ dB}$) when detector blinding saturation is detected.
+6. **AES-256-GCM Quantum-Secured Cryptography**: Uses the distilled 256-bit symmetric quantum key to encrypt confidential payloads with Galois/Counter Mode (GCM) authenticated encryption and 128-bit MAC tag verification.
 
 ---
 

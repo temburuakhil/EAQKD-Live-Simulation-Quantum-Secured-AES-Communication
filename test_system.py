@@ -142,5 +142,42 @@ def test_end_to_end_pipeline():
     assert res_attack['quantum_key_hex'] is None
     assert "WITHHELD" in res_attack['aes_encryption']['plaintext']
 
+def test_security_analyzer():
+    from src.security_analyzer import SecurityAnalyzer
+    analyzer = SecurityAnalyzer()
+    
+    score_normal = analyzer.compute_security_score(
+        metrics={'qber': 1.8, 'bell_parameter_s': 2.75, 'key_rate_kbps': 4.5},
+        ml_diagnosis={'attack_probability': 0.02, 'predicted_attack_type': 'Normal'}
+    )
+    assert score_normal['overall_security_score'] > 80.0
+    assert score_normal['leakage_analysis']['leakage_risk_tier'] == "MINIMAL_LEAKAGE"
+    
+    score_attack = analyzer.compute_security_score(
+        metrics={'qber': 25.0, 'bell_parameter_s': 1.45, 'key_rate_kbps': 0.0},
+        ml_diagnosis={'attack_probability': 0.99, 'predicted_attack_type': 'Intercept_Resend'}
+    )
+    assert score_attack['overall_security_score'] < 30.0
+    assert score_attack['leakage_analysis']['leakage_risk_tier'] == "CRITICAL_LEAKAGE"
+
+def test_adaptive_optimizer():
+    from src.adaptive_optimizer import AdaptiveParameterOptimizer
+    optimizer = AdaptiveParameterOptimizer()
+    
+    opt_normal = optimizer.optimize_parameters(
+        metrics={'qber': 1.9, 'noise_level_cps': 850.0, 'distance_km': 25.0},
+        ml_diagnosis={'attack_probability': 0.02, 'predicted_attack_type': 'Normal'}
+    )
+    assert opt_normal['optimal_p_z_basis'] == 0.85
+    assert opt_normal['expected_sifting_efficiency_pct'] > 70.0
+    assert opt_normal['anti_blinding_protection'] is False
+    
+    opt_blinding = optimizer.optimize_parameters(
+        metrics={'qber': 0.25, 'noise_level_cps': 20.0, 'distance_km': 25.0},
+        ml_diagnosis={'attack_probability': 0.98, 'predicted_attack_type': 'Detector_Blinding'}
+    )
+    assert opt_blinding['anti_blinding_protection'] is True
+    assert opt_blinding['voa_attenuation_db'] == 15.0
+
 if __name__ == '__main__':
     pytest.main(['-v', 'test_system.py'])

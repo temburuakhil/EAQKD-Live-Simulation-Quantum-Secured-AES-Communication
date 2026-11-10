@@ -20,6 +20,8 @@ from .attacks import (
 from .ml_detector import MLAttackDetector
 from .eaqkd_protocol import EAQKDProtocol, EAQKDSessionResult
 from .aes_cipher import AESQuantumCipher
+from .security_analyzer import SecurityAnalyzer
+from .adaptive_optimizer import AdaptiveParameterOptimizer
 
 class EAQKDSecureSystem:
     """Integrated End-to-End System combining EAQKD, XGBoost Defense, and AES-256."""
@@ -28,6 +30,8 @@ class EAQKDSecureSystem:
         self.attack_threshold = attack_threshold
         self.max_tolerable_qber = max_tolerable_qber
         self.detector = MLAttackDetector()
+        self.security_analyzer = SecurityAnalyzer(abort_qber_threshold=max_tolerable_qber)
+        self.adaptive_optimizer = AdaptiveParameterOptimizer()
         
     def _create_attack_instance(self, attack_type: str, intensity: float = 0.85) -> Optional[BaseAttack]:
         attack_type = str(attack_type).strip()
@@ -70,6 +74,15 @@ class EAQKDSecureSystem:
         
         session_result: EAQKDSessionResult = protocol.run_exchange(n_pairs=n_qubits, attack=attack_obj)
         
+        security_eval = self.security_analyzer.compute_security_score(
+            metrics=session_result.channel_metrics,
+            ml_diagnosis=session_result.ml_diagnosis
+        )
+        adaptive_eval = self.adaptive_optimizer.optimize_parameters(
+            metrics=session_result.channel_metrics,
+            ml_diagnosis=session_result.ml_diagnosis
+        )
+        
         response = {
             'distance_km': distance_km,
             'simulated_attack_scenario': attack_type,
@@ -81,6 +94,8 @@ class EAQKDSecureSystem:
             'ml_status_message': session_result.ml_diagnosis['status_message'],
             'class_probabilities': session_result.ml_diagnosis['class_probabilities'],
             'feature_contributions': session_result.ml_diagnosis['feature_contributions'],
+            'security_score': security_eval,
+            'adaptive_optimization': adaptive_eval,
             'key_distribution_success': session_result.success,
             'abort_reason': session_result.abort_reason
         }
@@ -137,4 +152,7 @@ class EAQKDSecureSystem:
             'key_rate_kbps': key_rate_kbps,
             'delay_ns': delay_ns
         }
-        return self.detector.predict(metrics, threshold=self.attack_threshold)
+        diag = self.detector.predict(metrics, threshold=self.attack_threshold)
+        sec_eval = self.security_analyzer.compute_security_score(metrics=metrics, ml_diagnosis=diag)
+        diag['security_score'] = sec_eval
+        return diag

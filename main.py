@@ -35,6 +35,24 @@ def display_session_result(res: dict):
     print(f"  - Classified Attack:  {res['ml_detected_attack_type']}")
     print(f"  - Security Action:    {res['ml_security_action']}")
     print(f"  - Status Message:     {res['ml_status_message']}")
+
+    # Security Score and Leakage Analysis
+    sec = res.get('security_score', {})
+    if sec:
+        leak = sec.get('leakage_analysis', {})
+        print("\nQuantum Security Score & Leakage Analysis:")
+        print(f"  - Overall Score:      {sec.get('overall_security_score', 0):.1f}/100 ({sec.get('rating', '')})")
+        print(f"  - Leakage Risk Tier:  {leak.get('leakage_risk_tier', 'N/A')}")
+        print(f"  - Eve Holevo Bound:   {leak.get('eve_information_upper_bound_bits', 0):.4f} bits/photon")
+
+    # Adaptive Optimizations
+    adapt = res.get('adaptive_optimization', {})
+    if adapt:
+        print("\nAdaptive Parameter Optimizations:")
+        print(f"  - Optimal Basis:      p_Z={adapt.get('optimal_p_z_basis', 0.5):.2f}, p_X={adapt.get('optimal_p_x_basis', 0.5):.2f}")
+        print(f"  - Sifting Efficiency: {adapt.get('expected_sifting_efficiency_pct', 50):.1f}%")
+        print(f"  - Coincidence Window: {adapt.get('optimal_coincidence_window_ns', 2.5):.1f} ns")
+        print(f"  - Anti-Blinding VOA:  {'ENGAGED' if adapt.get('anti_blinding_protection') else 'Disengaged'}")
     
     print("\nCryptographic Outcome:")
     if res['key_distribution_success']:
