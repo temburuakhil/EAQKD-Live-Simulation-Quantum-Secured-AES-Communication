@@ -1,0 +1,11 @@
+[
+  "distance_km",
+  "photon_loss_db",
+  "noise_level_cps",
+  "qber",
+  "key_rate_kbps",
+  "delay_ns",
+  "visibility",
+  "bell_parameter_s",
+  "phase_error_rate"
+]

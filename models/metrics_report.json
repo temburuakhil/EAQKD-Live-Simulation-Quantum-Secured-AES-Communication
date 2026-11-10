@@ -1,0 +1,55 @@
+{
+  "binary_metrics": {
+    "accuracy": 0.9996666666666667,
+    "precision": 1.0,
+    "recall": 0.9993333333333333,
+    "f1_score": 0.9996665555185061,
+    "roc_auc": 1.0
+  },
+  "multiclass_metrics": {
+    "accuracy": 1.0,
+    "f1_macro": 1.0,
+    "roc_auc_ovr": 1.0,
+    "class_names": [
+      "Detector_Blinding",
+      "Intercept_Resend",
+      "Jamming_DoS",
+      "Normal",
+      "PNS"
+    ]
+  },
+  "benchmarks": {
+    "XGBoost": {
+      "Accuracy": 0.99967,
+      "Precision": 1.0,
+      "Recall": 0.99933,
+      "F1_Score": 0.99967,
+      "ROC_AUC": 1.0
+    },
+    "LightGBM": {
+      "Accuracy": 1.0,
+      "Precision": 1.0,
+      "Recall": 1.0,
+      "F1_Score": 1.0,
+      "ROC_AUC": 1.0
+    },
+    "Random_Forest": {
+      "Accuracy": 1.0,
+      "Precision": 1.0,
+      "Recall": 1.0,
+      "F1_Score": 1.0,
+      "ROC_AUC": 1.0
+    }
+  },
+  "feature_importances": {
+    "distance_km": 0.011165522038936615,
+    "visibility": 0.01992597058415413,
+    "photon_loss_db": 0.04417124390602112,
+    "noise_level_cps": 0.04985902085900307,
+    "bell_parameter_s": 0.07646182924509048,
+    "key_rate_kbps": 0.14364944398403168,
+    "qber": 0.19911570847034454,
+    "phase_error_rate": 0.20570571720600128,
+    "delay_ns": 0.24994558095932007
+  }
+}
